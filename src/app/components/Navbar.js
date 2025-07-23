@@ -1,194 +1,159 @@
-"use client"
-import React from 'react';
-import { Bell, ChevronDown } from 'lucide-react';
+'use client'
+import React, { useState } from 'react';
+import Image from 'next/image';
 
-// Configure Tailwind CSS to include custom colors and fonts
-// This configuration is typically in a tailwind.config.js file,
-// but for a self-contained immersive, we'll include it here
-// as a comment for context. In a real Next.js app, you'd configure
-// your `tailwind.config.js` like this:
-/*
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        'hamara-blue': '#007BFF', // Example blue color
-        'hamara-light-blue': '#6B7280', // Example light blue/gray color
-      },
-      fontFamily: {
-        sarabun: ['Sarabun', 'sans-serif'],
-      },
-    },
-  },
-};
-*/
-
-// Main Navbar component
 const Navbar = ({ 
   userEmail = "Yash",
   companyName = "Billions careers pvt ltd.",
-  userAvatar = "https://placehold.co/40x40/E0E0E0/000000?text=YA", // Placeholder for user avatar
-  logoSrc = "https://placehold.co/100x50/007BFF/FFFFFF?text=Logo", // Placeholder for logo
   onDownloadApp = () => console.log('Download app clicked'),
   onNotificationClick = () => console.log('Notification clicked'),
   onProfileClick = () => console.log('Profile clicked')
 }) => {
-  // State to manage dropdown visibility
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-
-  // Toggle dropdown visibility
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  // Close dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isDropdownOpen && !event.target.closest('.user-profile-dropdown')) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-white border-b border-gray-200 px-6 py-3 font-inter">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left Side - Logo */}
+    <nav className="w-full bg-white border-b border-gray-100 px-4 sm:px-6 lg:px-8 py-3">
+      <div className="max-w-full flex items-center justify-between">
+        {/* Left Side*/}
         <div className="flex items-center">
+         
           <div 
-            className="flex items-center gap-1.5"
+            className="flex items-center"
             style={{ width: '141px', height: '74px' }}
           >
-            {/* Logo placeholder - using Tailwind for a simple logo representation */}
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-white rounded-full relative">
-                  <div className="absolute top-0.5 left-0.5 w-1.5 h-1.5 bg-white rounded-full"></div>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-blue-600 font-bold text-xl leading-none">
-                  Hamara
-                </span>
-                <span className="text-blue-600 font-bold text-xl leading-none">
-                  Jobs
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Powered by text */}
-          <div className="ml-4 flex items-center gap-2 text-sm text-gray-600">
-            <span className="font-normal">Powered by</span>
-            <span className="font-semibold text-gray-800">QUESS</span>
+            <Image
+              src="/assets/hamara-logo.png"
+              alt="Hamara Jobs - Powered by QUESS"
+              width={141}
+              height={74}
+              className="object-contain ml-10"
+              priority
+            />
           </div>
         </div>
 
         {/* Right Side - Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Notification Icon */}
           <button
             onClick={onNotificationClick}
-            className="relative p-2 hover:bg-gray-50 transition-colors rounded-xl flex items-center justify-center"
+            className="relative flex items-center justify-center hover:bg-gray-50 transition-colors"
             style={{ 
               width: '40px', 
               height: '40px',
+              borderRadius: '12px'
             }}
           >
-            <Bell 
-              size={20} 
-              className="text-gray-600" 
+            <Image
+              src="/assets/notification-icon.png"
+              alt="Notifications"
+              width={40}
+              height={40}
+              className="object-contain"
             />
             {/* Notification badge */}
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+            {/* <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div> */}
           </button>
 
-          {/* Download App Button */}
+         
           <button
             onClick={onDownloadApp}
-            className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors px-6 py-3 rounded-lg font-semibold text-base"
+            className="hidden sm:flex items-center font-sarabun justify-center border-2 border-[#002DA5] text-[#002DA5] hover:bg-blue-50 transition-colors rounded-lg"
             style={{
               width: '145px',
               height: '52px',
+              fontFamily: 'Sarabun',
+              fontWeight: '600',
+              fontSize: '16px',
+              lineHeight: '100%',
               letterSpacing: '-0.3px'
             }}
           >
             Download app
           </button>
 
+          {/* Mobile Download Button  */}
+          <button
+            onClick={onDownloadApp}
+            className="sm:hidden flex items-center justify-center border-2 border-hamara-blue text-hamara-blue hover:bg-blue-50 transition-colors rounded-lg p-2"
+            style={{ width: '40px', height: '40px' }}
+          >
+            <Image
+              src="/assets/download-icon.png"
+              alt="Download"
+              width={20}
+              height={20}
+              className="object-contain"
+            />
+          </button>
+
           {/* User Profile Dropdown */}
-          <div className="relative user-profile-dropdown">
+          <div className="relative">
             <button
-              onClick={toggleDropdown} // Use toggleDropdown
-              className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2 bg-[#F5F5F5] rounded-full hover:bg-gray-50 transition-colors"
             >
               {/* User Avatar */}
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-white font-semibold text-sm">
-                <img
-                  src={userAvatar}
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                <Image
+                  src="/assets/user-icon.png"
                   alt={userEmail}
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    // Fallback to initials if image fails to load
-                    e.target.style.display = 'none'; // Hide the broken image
-                    const parent = e.target.parentNode;
-                    if (parent) {
-                      parent.innerHTML = `
-                        <div class="w-full h-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
-                          ${userEmail.charAt(0).toUpperCase()}
-                        </div>
-                      `;
-                    }
+                  
+                    e.target.style.display = 'none';
+                    e.target.parentNode.innerHTML = `
+                      <div class="w-full h-full bg-hamara-blue text-white flex items-center justify-center font-sarabun font-semibold text-sm rounded-full">
+                        ${userEmail.charAt(0).toUpperCase()}
+                      </div>
+                    `;
                   }}
                 />
               </div>
               
-              {/* User Info */}
-              <div className="flex flex-col items-start">
-                <span className="font-semibold text-sm text-gray-900 leading-tight">
+              {/* User Info -  */}
+              <div className="hidden sm:flex flex-col items-start min-w-0">
+                <span className="font-sarabun font-normal text-[14px] text-gray-900 leading-tight truncate max-w-[120px] lg:max-w-[200px]">
                   {userEmail}
                 </span>
-                <span className="font-normal text-xs text-gray-600 leading-tight">
+                <span className="font-sarabun font-semibold text-[16px] text-[#002DA5] leading-tight truncate max-w-[120px] lg:max-w-[200px]">
                   {companyName}
                 </span>
               </div>
               
               {/* Dropdown Arrow */}
-              <ChevronDown size={16} className={`text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              <div className="hidden sm:block">
+                <Image
+                  src="/assets/dropdown-icon.png"
+                  alt="Dropdown"
+                  width={12}
+                  height={12}
+                  className={`object-contain transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                />
+              </div>
             </button>
             
-            {/* Dropdown Menu - Conditionally rendered based on state */}
+            {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+              <div className="absolute right-0 top-full mt-2 w-64  rounded-lg shadow-lg border bg-white border-gray-200 z-50">
                 <div className="p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-white font-semibold text-base">
-                      <img
-                        src={userAvatar}
+                    <div className="w-12 h-12 rounded-full overflow-hidden bg-[#F5F5F5] flex-shrink-0">
+                      <Image
+                        src="/assets/user-icon.png"
                         alt={userEmail}
+                        width={48}
+                        height={48}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          const parent = e.target.parentNode;
-                          if (parent) {
-                            parent.innerHTML = `
-                              <div class="w-full h-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
-                                ${userEmail.charAt(0).toUpperCase()}
-                              </div>
-                            `;
-                          }
-                        }}
                       />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm text-gray-900">
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-sarabun font-normal text-[14px] text-gray-900 truncate">
                         {userEmail}
                       </span>
-                      <span className="font-normal text-xs text-gray-600">
+                      <span className="font-sarabun font-semibold text-[16px] text-[#002DA5] truncate">
                         {companyName}
                       </span>
                     </div>
@@ -196,17 +161,14 @@ const Navbar = ({
                 </div>
                 
                 <div className="p-2">
-                  <button className="w-full text-left px-3 py-2 text-sm font-normal hover:bg-gray-50 rounded">
-                    Profile Settings
+                  <button className="w-full text-left px-3 py-2 font-normal text-[#001242] text-[16px] font-sarabun hover:bg-gray-50 rounded flex items-center gap-2">
+                    <Image src="/assets/phone-black.png" alt="" width={16} height={16} />
+                    Contact Sales
                   </button>
-                  <button className="w-full text-left px-3 py-2 text-sm font-normal hover:bg-gray-50 rounded">
-                    Account Settings
-                  </button>
-                  <button className="w-full text-left px-3 py-2 text-sm font-normal hover:bg-gray-50 rounded">
-                    Help & Support
-                  </button>
-                  <hr className="my-2" />
-                  <button className="w-full text-left px-3 py-2 text-sm font-normal hover:bg-gray-50 rounded text-red-600">
+                  
+                  <hr className=" h-3 text-[#EEEEEE]" />
+                  <button className="w-full text-left px-3 py-2 font-normal text-[16px] font-sarabun hover:bg-gray-50 rounded text-[#FF3B2A] flex items-center gap-2">
+                    <Image src="/assets/logout-icon.png" alt="" width={16} height={16} />
                     Logout
                   </button>
                 </div>
@@ -215,8 +177,20 @@ const Navbar = ({
           </div>
         </div>
       </div>
+
+      <div className="sm:hidden mt-2 pt-2 border-t border-gray-100">
+        <div className="flex items-center gap-2">
+          <span className="font-sarabun font-medium text-sm text-gray-900 truncate">
+            {userEmail}
+          </span>
+          <span className="text-gray-400">•</span>
+          <span className="font-sarabun font-normal text-xs text-hamara-light-blue truncate">
+            {companyName}
+          </span>
+        </div>
+      </div>
     </nav>
   );
 };
 
-export default Navbar; // <--- This line was missing and caused the error!
+export default Navbar;
