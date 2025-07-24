@@ -1,3 +1,5 @@
+
+
 "use client";
 import React from "react";
 import Image from "next/image";
@@ -8,6 +10,7 @@ const JobFormLayout = ({
   onContinue,
   onBack,
   showBackButton = false,
+  rightSidebarContent = null,
 }) => {
   const steps = [
     { id: 1, label: "1. Basic details" },
@@ -18,10 +21,11 @@ const JobFormLayout = ({
 
   return (
     <div
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen bg-[#F5F5F5]"
       style={{ fontFamily: "Sarabun, sans-serif" }}
     >
       {/* AI Search Prompt Section */}
+      {currentStep !== 4 && (
       <div
         className="bg-hamara-blue px-4 sm:px-6 lg:px-8 py-6"
         style={{
@@ -92,6 +96,7 @@ const JobFormLayout = ({
           </div>
         </div>
       </div>
+      )}
 
       {/* Progress Steps */}
       <div className="px-4 sm:px-6 lg:px-8 py-8 mt-10 select-none">
@@ -166,40 +171,42 @@ const JobFormLayout = ({
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-6">
-            {/* Left Sidebar - Preview */}
-            <div className="flex-shrink-0">
-              <div
-                className="bg-white shadow-sm border border-gray-200"
-                style={{
-                  width: "392px",
-                  height: "493px",
-                  borderRadius: "24px",
-                  padding: "24px",
-                }}
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <Image
-                    src="/assets/star-icon.png"
-                    alt="Preview"
-                    width={20}
-                    height={20}
-                  />
-                  <span className="font-sarabun font-medium text-sm text-gray-600">
-                    Job Preview
-                  </span>
-                </div>
+            {/* Left Sidebar - Preview (only for steps 1-3) */}
+            {currentStep !== 4 && (
+              <div className="flex-shrink-0">
+                <div
+                  className="bg-white shadow-sm border border-gray-200"
+                  style={{
+                    width: "392px",
+                    height: "493px",
+                    borderRadius: "24px",
+                    padding: "24px",
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Image
+                      src="/assets/star-icon.png"
+                      alt="Preview"
+                      width={20}
+                      height={20}
+                    />
+                    <span className="font-sarabun font-medium text-sm text-gray-600">
+                      Job Preview
+                    </span>
+                  </div>
 
-                {/* Preview Card */}
-                <div className="border border-gray-200 rounded-lg p-3">
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-100 rounded w-1/2"></div>
-                    <div className="h-3 bg-gray-100 rounded w-2/3"></div>
-                    <div className="h-3 bg-gray-100 rounded w-1/3"></div>
+                  {/* Preview Card */}
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-100 rounded w-1/2"></div>
+                      <div className="h-3 bg-gray-100 rounded w-2/3"></div>
+                      <div className="h-3 bg-gray-100 rounded w-1/3"></div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Main Form */}
             <div className="flex-1 min-w-0">
@@ -208,29 +215,39 @@ const JobFormLayout = ({
                 style={{
                   borderRadius: "24px",
                   padding: "24px",
+                  ...(currentStep === 4 ? { maxWidth: "full" } : {})
                 }}
               >
                 {children}
 
-                {/* Navigation Buttons */}
-                <div className="flex justify-end gap-4 pt-4">
-                  {showBackButton && (
+                {/* Navigation Buttons - Only show for steps 1-3 */}
+                {currentStep !== 4 && (
+                  <div className="flex justify-end gap-4 pt-4">
+                    {showBackButton && (
+                      <button
+                        onClick={onBack}
+                        className=" text-gray-700 px-8 py-3 rounded-lg font-sarabun font-medium"
+                      >
+                        Back
+                      </button>
+                    )}
                     <button
-                      onClick={onBack}
-                      className="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-sarabun font-medium hover:bg-gray-300 transition-colors"
+                      onClick={onContinue}
+                      className="bg-hamara-blue text-white px-8 py-3 rounded-lg font-sarabun font-medium hover:bg-blue-700 transition-colors"
                     >
-                      Back
+                      Continue
                     </button>
-                  )}
-                  <button
-                    onClick={onContinue}
-                    className="bg-hamara-blue text-white px-8 py-3 rounded-lg font-sarabun font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    Continue
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Right Sidebar - Benefits (only for step 4) */}
+            {currentStep === 4 && rightSidebarContent && (
+              <div className="flex-shrink-0">
+                {rightSidebarContent}
+              </div>
+            )}
           </div>
         </div>
       </div>
